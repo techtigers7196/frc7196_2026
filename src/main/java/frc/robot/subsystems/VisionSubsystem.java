@@ -61,7 +61,7 @@ public class VisionSubsystem extends SubsystemBase{
         if (distance !=0){
             return 10.37056*distance*distance+81.9512*distance+1618.04+35;
         }
-    return 1850;
+    return 0;
     }
 
     public void periodic()

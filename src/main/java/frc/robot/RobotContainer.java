@@ -30,7 +30,7 @@ public class RobotContainer {
   private final VisionSubsystem visionSubsystem = new VisionSubsystem();  
   private final ShooterSubsystem shootersubsystem = new ShooterSubsystem();
   private final HopperSubsystem hopperSubsystem = new HopperSubsystem();
-  //private final IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
+  private final IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
 
   private final SwerveSubsystem drivebase = new SwerveSubsystem();
   final CommandXboxController driverXbox = new CommandXboxController(DriveConstants.kDriverControllerPort);
@@ -71,7 +71,7 @@ Command driveFielOrientedAngularVelocity = drivebase.driveFieldOrientedCommand(d
     driverXbox.x().onTrue(driveFieldOrientedDirectAngle);
 
     driverXbox.y().onTrue(hopperSubsystem.runHopper(0, -0.6)).onFalse(hopperSubsystem.stop());
-    //driverXbox.rightTrigger(0.1).onTrue(intakeSubsystem.runIntake(.7)).onFalse(intakeSubsystem.stop());
+    driverXbox.rightTrigger(0.1).onTrue(intakeSubsystem.runIntake(.7)).onFalse(intakeSubsystem.stop());
     driverXbox.rightBumper().whileTrue(shootersubsystem.runShootCommand()).onFalse(shootersubsystem.stop());
     //supportXbox.rightBumper().onTrue(shootersubsystem.setPower(0.3)).onFalse(shootersubsystem.stop());
     driverXbox.povUp().onTrue(new InstantCommand(() -> {
@@ -81,7 +81,12 @@ Command driveFielOrientedAngularVelocity = drivebase.driveFieldOrientedCommand(d
       shootersubsystem.increment_setpoint(-25);
     }));
 driverXbox.povRight().onTrue(new InstantCommand(() -> {
-      shootersubsystem.set_setpoint(visionSubsystem.getrpm());
+      double visionRPM = visionSubsystem.getrpm();
+      if (visionRPM != 0)
+      {
+        shootersubsystem.set_setpoint(visionRPM);
+      }
+      
     }));
 
 
