@@ -11,9 +11,21 @@
           }
         },
         {
-          "type": "named",
+          "type": "path",
           "data": {
-            "name": "AlignToTag"
+            "pathName": "auto4"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "auto5"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": null
           }
         }
       ]

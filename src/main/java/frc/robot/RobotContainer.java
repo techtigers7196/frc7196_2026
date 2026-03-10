@@ -59,6 +59,15 @@ Command driveFielOrientedAngularVelocity = drivebase.driveFieldOrientedCommand(d
     SmartDashboard.putData("AutoChooser", autoChooser);
 
     NamedCommands.registerCommand("AlignToTag", new RunCommand(() -> drivebase.alignToTag(visionSubsystem), drivebase).raceWith(new WaitCommand(5)));
+    NamedCommands.registerCommand("RunShooter", shootersubsystem.runShootCommand());
+    NamedCommands.registerCommand("StopShooter", shootersubsystem.stop());
+    NamedCommands.registerCommand("RunHopper", hopperSubsystem.runHopper(.6, -.6));
+    NamedCommands.registerCommand("StopHopper", hopperSubsystem.stop());
+    NamedCommands.registerCommand("RunIntake", intakeSubsystem.runIntake(.9));
+    NamedCommands.registerCommand("StopIntake", intakeSubsystem.stop());
+    NamedCommands.registerCommand("ExtendIntake", intakeSubsystem.runExtension(.6));
+    NamedCommands.registerCommand("StopExtendIntake", intakeSubsystem.stop());
+
   }
 
   private void configureBindings() {
@@ -70,8 +79,8 @@ Command driveFielOrientedAngularVelocity = drivebase.driveFieldOrientedCommand(d
     driverXbox.b().onTrue(driveFielOrientedAngularVelocity);
     driverXbox.x().onTrue(driveFieldOrientedDirectAngle);
 
-    driverXbox.y().onTrue(hopperSubsystem.runHopper(0, -0.6)).onFalse(hopperSubsystem.stop());
-    driverXbox.rightTrigger(0.1).onTrue(intakeSubsystem.runIntake(.7)).onFalse(intakeSubsystem.stop());
+    driverXbox.y().onTrue(hopperSubsystem.runHopper(.6, -0.6)).onFalse(hopperSubsystem.stop());
+    driverXbox.rightTrigger(0.1).onTrue(intakeSubsystem.runIntake(.9)).onFalse(intakeSubsystem.stop());
     driverXbox.rightBumper().whileTrue(shootersubsystem.runShootCommand()).onFalse(shootersubsystem.stop());
     //supportXbox.rightBumper().onTrue(shootersubsystem.setPower(0.3)).onFalse(shootersubsystem.stop());
     driverXbox.povUp().onTrue(new InstantCommand(() -> {
@@ -88,6 +97,9 @@ driverXbox.povRight().onTrue(new InstantCommand(() -> {
       }
       
     }));
+
+    driverXbox.back().onTrue(intakeSubsystem.runExtension(-.6)).onFalse(intakeSubsystem.stop());
+    driverXbox.start().onTrue(intakeSubsystem.runExtension(.6)).onFalse(intakeSubsystem.stop());
 
 
   }

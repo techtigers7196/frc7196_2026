@@ -33,8 +33,8 @@ public class ShooterSubsystem extends SubsystemBase {
   private final RelativeEncoder m_shooterEncoder = m_shooterMotor.getEncoder();//new Encoder(0, 1, false);
 
   // Feedforward and PID (start at 0.0 per request)
-  private final SimpleMotorFeedforward m_shooterFeedforward = new SimpleMotorFeedforward(0.00, 0.000187);//(1/0.18)/60);
-  private final PIDController m_shooterPID = new PIDController(0.0004, 0.0000, 0.00001);
+  private final SimpleMotorFeedforward m_shooterFeedforward = new SimpleMotorFeedforward(0.00, 0.000183);//(1/0.18)/60);
+  private final PIDController m_shooterPID = new PIDController(0.00045, 0.0000, 0.000015);
 
 
   // NetworkTables telemetry (units: RPM)
