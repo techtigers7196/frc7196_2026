@@ -33,7 +33,8 @@ public class ShooterSubsystem extends SubsystemBase {
   private final RelativeEncoder m_shooterEncoder = m_shooterMotor.getEncoder();//new Encoder(0, 1, false);
 
   // Feedforward and PID (start at 0.0 per request)
-  private final SimpleMotorFeedforward m_shooterFeedforward = new SimpleMotorFeedforward(0.00, 0.000183);//(1/0.18)/60);
+  //private final SimpleMotorFeedforward m_shooterFeedforward = new SimpleMotorFeedforward(0.00, 0.000183);//(1/0.18)/60);
+  private final SimpleMotorFeedforward m_shooterFeedforward = new SimpleMotorFeedforward(0.159177, 0.00209713);
   private final PIDController m_shooterPID = new PIDController(0.00045, 0.0000, 0.000015);
 
 
@@ -101,7 +102,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
         double ff = m_shooterFeedforward.calculate(m_setpoint);
         double  outputVoltage = ff + pidOutput ;
-        m_shooterMotor.set(outputVoltage);
+        m_shooterMotor.setVoltage(outputVoltage);
         SmartDashboard.putNumber("ShooterRPM",currentRPM);
       }
       SmartDashboard.putBoolean("Is PID active", currentRPM >= limit);
