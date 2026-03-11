@@ -61,7 +61,7 @@ Command driveFielOrientedAngularVelocity = drivebase.driveFieldOrientedCommand(d
     NamedCommands.registerCommand("AlignToTag", new RunCommand(() -> drivebase.alignToTag(visionSubsystem), drivebase).raceWith(new WaitCommand(5)));
     NamedCommands.registerCommand("RunShooter", shootersubsystem.runShootCommand());
     NamedCommands.registerCommand("StopShooter", shootersubsystem.stop());
-    NamedCommands.registerCommand("RunHopper", hopperSubsystem.runHopper(.6, -.6));
+    NamedCommands.registerCommand("RunHopper", hopperSubsystem.runHopper(-.75, -.75));
     NamedCommands.registerCommand("StopHopper", hopperSubsystem.stop());
     NamedCommands.registerCommand("RunIntake", intakeSubsystem.runIntake(.9));
     NamedCommands.registerCommand("StopIntake", intakeSubsystem.stop());
@@ -79,7 +79,7 @@ Command driveFielOrientedAngularVelocity = drivebase.driveFieldOrientedCommand(d
     driverXbox.b().onTrue(driveFielOrientedAngularVelocity);
     driverXbox.x().onTrue(driveFieldOrientedDirectAngle);
 
-    driverXbox.y().onTrue(hopperSubsystem.runHopper(.6, -0.6)).onFalse(hopperSubsystem.stop());
+    driverXbox.y().onTrue(hopperSubsystem.runHopper(.-.75, -0.75)).onFalse(hopperSubsystem.stop());
     driverXbox.rightTrigger(0.1).onTrue(intakeSubsystem.runIntake(.9)).onFalse(intakeSubsystem.stop());
     driverXbox.rightBumper().whileTrue(shootersubsystem.runShootCommand()).onFalse(shootersubsystem.stop());
     //supportXbox.rightBumper().onTrue(shootersubsystem.setPower(0.3)).onFalse(shootersubsystem.stop());
