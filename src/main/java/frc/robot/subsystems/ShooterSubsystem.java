@@ -145,6 +145,12 @@ public class ShooterSubsystem extends SubsystemBase {
   {
     driveOffset += increment;
   }
+
+  public boolean isReady()
+  {
+    return Math.abs(rpm - m_setpoint) < 20;
+  }
+
   @Override
   public void periodic() {
     // publish encoder rate (RPM) and current setpoint

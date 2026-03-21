@@ -87,6 +87,8 @@ Command driveFielOrientedAngularVelocity = drivebase.driveFieldOrientedCommand(d
     //driverXbox.x().onTrue(driveFieldOrientedDirectAngle);
 
     supportXbox.y().onTrue(hopperSubsystem.runHopper(-.85, -0.85)).onFalse(hopperSubsystem.stop());
+    supportXbox.x().onTrue(hopperSubsystem.runHopperifReady(-.85, -0.85, shootersubsystem)).onFalse(hopperSubsystem.stop());
+
     supportXbox.a().onTrue(hopperSubsystem.runHopper(1, 1)).onFalse(hopperSubsystem.stop());
     driverXbox.rightTrigger(0.1).onTrue(intakeSubsystem.runIntake(.9)).onFalse(intakeSubsystem.stop());
     driverXbox.leftTrigger(0.1).onTrue(intakeSubsystem.runIntake(-.9)).onFalse(intakeSubsystem.stop());

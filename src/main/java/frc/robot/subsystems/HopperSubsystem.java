@@ -17,7 +17,22 @@ public class HopperSubsystem extends SubsystemBase {
             m_feedermotor.set(feedpower);
         });
     }
-
+    
+    public Command runHopperifReady(double hopperpower, double feedpower, ShooterSubsystem shooter)
+    {
+        return run(() -> {
+            if (shooter.isReady())
+            {
+                m_hoppermotor.set(hopperpower);
+                m_feedermotor.set(feedpower);
+            }
+            else 
+            {
+                m_hoppermotor.set(0);
+                m_feedermotor.set(0);
+            }
+        });
+    }
     public Command stop() {
         return runOnce(() ->{
             m_hoppermotor.set(0);
