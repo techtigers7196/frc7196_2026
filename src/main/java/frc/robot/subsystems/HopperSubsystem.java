@@ -12,14 +12,14 @@ public class HopperSubsystem extends SubsystemBase {
 
     public Command runHopper(double hopperpower, double feedpower)
     {
-        return run(() -> {
+        return runOnce(() -> {
             m_hoppermotor.set(hopperpower);
             m_feedermotor.set(feedpower);
         });
     }
 
     public Command stop() {
-        return run(() ->{
+        return runOnce(() ->{
             m_hoppermotor.set(0);
             m_feedermotor.set(0);
         });

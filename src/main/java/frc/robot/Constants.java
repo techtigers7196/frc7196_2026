@@ -7,7 +7,7 @@ public class Constants {
         public static int kOperatorControllerPort = 1;
 
         public static double kDriveDeadband = 0.1;
-        public static double kMaxSpeedFPS = 12.0;
+        public static double kMaxSpeedFPS = 15.0;
     }
 
     public static class VisionConstants

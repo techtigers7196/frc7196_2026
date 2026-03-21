@@ -10,6 +10,7 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -34,8 +35,12 @@ public class ShooterSubsystem extends SubsystemBase {
 
   // Feedforward and PID (start at 0.0 per request)
   //private final SimpleMotorFeedforward m_shooterFeedforward = new SimpleMotorFeedforward(0.00, 0.000183);//(1/0.18)/60);
-  private final SimpleMotorFeedforward m_shooterFeedforward = new SimpleMotorFeedforward(0.159177, 0.00209713);
-  private final PIDController m_shooterPID = new PIDController(0.00045, 0.0000, 0.000015);
+  private final SimpleMotorFeedforward m_shooterFeedforward = new SimpleMotorFeedforward(0, 0.0019);
+  private final PIDController m_shooterPID = new PIDController(0.001, 0.01, 0.0001);
+  
+  private double driveOffset = 0;   
+  //private final SimpleMotorFeedforward m_shooterFeedforward = new SimpleMotorFeedforward(0, 0.023);
+  //private final PIDController m_shooterPID = new PIDController(0.00, 0.0000, 0.00002);
 
 
   // NetworkTables telemetry (units: RPM)
@@ -45,10 +50,11 @@ public class ShooterSubsystem extends SubsystemBase {
   private final NetworkTableEntry m_errorEntry = m_nt.getEntry("RPMerror");
   private final NetworkTableEntry m_voltageEntry = m_nt.getEntry("applied voltage");
   private final NetworkTableEntry m_ready = m_nt.getEntry("shooter ready");
+  private final NetworkTableEntry m_offset = m_nt.getEntry("offset");
 
   private final BangBangController m_controller = new BangBangController();
 
-  private double m_setpoint = 2000.0; // RPM
+  private double m_setpoint = 1755.0; // RPM
   // private double bb_limit = m_setpoint * 0.9;
   private final double m_limit = 500;
 
@@ -57,6 +63,9 @@ public class ShooterSubsystem extends SubsystemBase {
   public ShooterSubsystem() {
     // sensible defaults so code compiles even without external Constants
     //m_shooterEncoder.setDistancePerPulse(1.0);
+
+  
+
     m_shooterPID.setTolerance(0.0);
 
     // initialize NetworkTables
@@ -101,7 +110,7 @@ public class ShooterSubsystem extends SubsystemBase {
         double pidOutput = m_shooterPID.calculate(currentRPM, m_setpoint);
 
         double ff = m_shooterFeedforward.calculate(m_setpoint);
-        double  outputVoltage = ff + pidOutput ;
+        double  outputVoltage = ff + pidOutput + driveOffset ;
         m_shooterMotor.setVoltage(outputVoltage);
         SmartDashboard.putNumber("ShooterRPM",currentRPM);
       }
@@ -111,14 +120,14 @@ public class ShooterSubsystem extends SubsystemBase {
 
   public Command setPower(double power)
   {
-    return run(() -> {
+    return runOnce(() -> {
       m_shooterMotor.set(power);
     });
   }
 
   public Command stop()
   {
-    return run(() -> {
+    return runOnce(() -> {
       m_shooterMotor.set(0);
     });
   }
@@ -132,17 +141,22 @@ public class ShooterSubsystem extends SubsystemBase {
   {
     m_setpoint = setpoint;
   }
-
+ public void incrementoffset(double increment)
+  {
+    driveOffset += increment;
+  }
   @Override
   public void periodic() {
     // publish encoder rate (RPM) and current setpoint
     double rpm = m_shooterEncoder.getVelocity(); // convert rev/sec to RPM
+    //driveOffset = m_offset.getDouble(0);
+    m_offset.setDouble(driveOffset);
     m_rpmEntry.setDouble(rpm);
     m_setpointEntry.setDouble(m_setpoint);
     m_errorEntry.setDouble(m_setpoint - rpm);
     m_voltageEntry.setDouble(m_shooterMotor.getAppliedOutput() * m_shooterMotor.getBusVoltage());
 
-    if (rpm < m_setpoint - 10)
+    if (Math.abs(rpm - m_setpoint) > 20)
     {
       m_ready.setBoolean(false);
     } 

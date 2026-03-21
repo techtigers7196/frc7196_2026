@@ -11,6 +11,7 @@ public class VisionSubsystem extends SubsystemBase{
     private NetworkTableEntry tx = table.getEntry("tx");
     private NetworkTableEntry ty = table.getEntry("ty");
     private NetworkTableEntry tz = table.getEntry("tz");
+      private NetworkTableEntry tid = table.getEntry("tid");
     private NetworkTableEntry tv = table.getEntry("tv");
     private NetworkTableEntry pitch = table.getEntry("pitch");
     private NetworkTableEntry yaw = table.getEntry("yaw");
@@ -28,13 +29,21 @@ public class VisionSubsystem extends SubsystemBase{
         double y  = ty.getDouble(0.0);
         double z = tz.getDouble(0.0);
         double v = tv.getDouble(0);
+        double id = tid.getDouble(0);
         /*double pitch = pitch.getDouble(0.0);
-        double yaw  = yaw.getDouble(0.0);
+        double yaw  = yaw.getDouble(0.0);6
         double roll = roll.getDouble(0.0);*/
+
+        if (id == 10 || id ==5 || id ==2 || id ==21 || id ==26 || id ==18){
+            return new double[]{x, y, z, v};
+
+        }
+
+
      
 
         
-        return new double[]{x, y, z, v};
+        return new double[]{0, 0, 0, 0};
     }
     
     public double getDistance()
@@ -59,7 +68,7 @@ public class VisionSubsystem extends SubsystemBase{
     public double getrpm(){
         double distance = getDistance();
         if (distance !=0){
-            return 10.37056*distance*distance+81.9512*distance+1618.04+35;
+            return 14.4189*distance*distance+9.2237*distance+1565.0723;
         }
     return 0;
     }

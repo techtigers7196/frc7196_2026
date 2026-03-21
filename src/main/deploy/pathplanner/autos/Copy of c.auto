@@ -7,25 +7,25 @@
         {
           "type": "path",
           "data": {
-            "pathName": "New Path"
+            "pathName": "c0"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "New New Path"
+            "pathName": "c2"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "New Path"
+            "pathName": "c3"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "New New Path"
+            "pathName": "c4"
           }
         }
       ]

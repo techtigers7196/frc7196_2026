@@ -12,20 +12,20 @@ public class IntakeSubsystem extends SubsystemBase {
 
     public Command runIntake(double power)
     {
-        return run (() -> {
+        return runOnce (() -> {
             m_intakemotor.set(power);
         });
     }
 
     public Command runExtension(double power)
     {
-        return run (() -> {
+        return runOnce (() -> {
             m_extensionmotor.set(power);
         });
     }
 
     public Command stop () {
-        return run (() -> {
+        return runOnce (() -> {
             m_intakemotor.set(0);
             m_extensionmotor.set(0);
         });

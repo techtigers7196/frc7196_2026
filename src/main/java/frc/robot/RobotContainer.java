@@ -43,7 +43,7 @@ public class RobotContainer {
                                                               () -> driverXbox.getLeftX()*-1)
                                                               .withControllerRotationAxis(() -> driverXbox.getRightX()*-1)
                                                               .deadband(DriveConstants.kDriveDeadband)
-                                                              .scaleTranslation(0.7)
+                                                              .scaleTranslation(0.9)
                                                               .allianceRelativeControl(false);
 Command driveFieldOrientedDirectAngle = drivebase.driveCommand(
 () -> MathUtil.applyDeadband(driverXbox.getLeftY()*-1,DriveConstants.kDriveDeadband),
@@ -55,9 +55,7 @@ Command driveFielOrientedAngularVelocity = drivebase.driveFieldOrientedCommand(d
   public RobotContainer() {
     configureBindings();
 
-    autoChooser = AutoBuilder.buildAutoChooser();
-    SmartDashboard.putData("AutoChooser", autoChooser);
-
+    
     NamedCommands.registerCommand("AlignToTag", new RunCommand(() -> drivebase.alignToTag(visionSubsystem), drivebase).raceWith(new WaitCommand(5)));
     NamedCommands.registerCommand("RunShooter", shootersubsystem.runShootCommand());
     NamedCommands.registerCommand("StopShooter", shootersubsystem.stop());
@@ -65,8 +63,12 @@ Command driveFielOrientedAngularVelocity = drivebase.driveFieldOrientedCommand(d
     NamedCommands.registerCommand("StopHopper", hopperSubsystem.stop());
     NamedCommands.registerCommand("RunIntake", intakeSubsystem.runIntake(.9));
     NamedCommands.registerCommand("StopIntake", intakeSubsystem.stop());
-    NamedCommands.registerCommand("ExtendIntake", intakeSubsystem.runExtension(.6));
-    NamedCommands.registerCommand("StopExtendIntake", intakeSubsystem.stop());
+    NamedCommands.registerCommand("ExtendIntake", intakeSubsystem.runExtension(.6).andThen(new WaitCommand(.3)));
+    NamedCommands.registerCommand("StopExtendIntake", intakeSubsystem.runExtension(0));
+    NamedCommands.registerCommand("RunShooterPower", shootersubsystem.setPower(.33));
+
+    autoChooser = AutoBuilder.buildAutoChooser();
+    SmartDashboard.putData("AutoChooser", autoChooser);
 
   }
 
@@ -75,13 +77,20 @@ Command driveFielOrientedAngularVelocity = drivebase.driveFieldOrientedCommand(d
 
     //driverXbox.a().whileTrue(drivebase.alignToTag(visionSubsystem));
     driverXbox.a().whileTrue(new AlignAndDriveCommand(visionSubsystem, drivebase, driverXbox));
-    // driverXbox.y().onTrue(Commands.runOnce(drivebase::zeroGyro));
-    driverXbox.b().onTrue(driveFielOrientedAngularVelocity);
-    driverXbox.x().onTrue(driveFieldOrientedDirectAngle);
+    driverXbox.y().onTrue(Commands.runOnce(drivebase::zeroGyro));
+    driverXbox.b().onTrue(new InstantCommand(() -> {
+      shootersubsystem.incrementoffset(0.02);
+    }));
+    driverXbox.x().onTrue(new InstantCommand(() -> {
+      shootersubsystem.incrementoffset(-0.02);
+    }));
+    //driverXbox.x().onTrue(driveFieldOrientedDirectAngle);
 
-    driverXbox.y().onTrue(hopperSubsystem.runHopper(.-.75, -0.75)).onFalse(hopperSubsystem.stop());
+    supportXbox.y().onTrue(hopperSubsystem.runHopper(-.85, -0.85)).onFalse(hopperSubsystem.stop());
+    supportXbox.a().onTrue(hopperSubsystem.runHopper(1, 1)).onFalse(hopperSubsystem.stop());
     driverXbox.rightTrigger(0.1).onTrue(intakeSubsystem.runIntake(.9)).onFalse(intakeSubsystem.stop());
-    driverXbox.rightBumper().whileTrue(shootersubsystem.runShootCommand()).onFalse(shootersubsystem.stop());
+    driverXbox.leftTrigger(0.1).onTrue(intakeSubsystem.runIntake(-.9)).onFalse(intakeSubsystem.stop());
+    supportXbox.rightBumper().whileTrue(shootersubsystem.runShootCommand()).onFalse(shootersubsystem.stop());
     //supportXbox.rightBumper().onTrue(shootersubsystem.setPower(0.3)).onFalse(shootersubsystem.stop());
     driverXbox.povUp().onTrue(new InstantCommand(() -> {
       shootersubsystem.increment_setpoint(25);

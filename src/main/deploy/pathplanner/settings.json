@@ -3,10 +3,13 @@
   "robotLength": 0.9,
   "holonomicMode": true,
   "pathFolders": [
-    "ba left",
     "New Folder",
-    "straight line",
-    "auto1"
+    "c",
+    "a",
+    "auto1",
+    "b",
+    "ba left",
+    "straight line"
   ],
   "autoFolders": [],
   "defaultMaxVel": 3.0,
