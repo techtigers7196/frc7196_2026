@@ -3,13 +3,14 @@
   "robotLength": 0.9,
   "holonomicMode": true,
   "pathFolders": [
-    "meh",
-    "d",
+    "e",
     "a",
     "auto1",
     "b",
     "ba left",
     "c",
+    "d",
+    "meh",
     "straight line"
   ],
   "autoFolders": [],
