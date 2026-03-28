@@ -23,7 +23,7 @@
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 0.2
+                  "waitTime": 0.5
                 }
               }
             ]
@@ -78,12 +78,6 @@
           }
         },
         {
-          "type": "path",
-          "data": {
-            "pathName": "d3"
-          }
-        },
-        {
           "type": "named",
           "data": {
             "name": "RunIntake"
@@ -99,6 +93,12 @@
           "type": "named",
           "data": {
             "name": "StopIntake"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "d3"
           }
         },
         {

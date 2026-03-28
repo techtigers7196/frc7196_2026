@@ -63,7 +63,7 @@ Command driveFielOrientedAngularVelocity = drivebase.driveFieldOrientedCommand(d
     NamedCommands.registerCommand("StopHopper", hopperSubsystem.stop());
     NamedCommands.registerCommand("RunIntake", intakeSubsystem.runIntake(.9));
     NamedCommands.registerCommand("StopIntake", intakeSubsystem.stop());
-    NamedCommands.registerCommand("ExtendIntake", intakeSubsystem.runExtension(.6).andThen(new WaitCommand(.3)));
+    NamedCommands.registerCommand("ExtendIntake", intakeSubsystem.runExtension(.6).andThen(new WaitCommand(.5)));
     NamedCommands.registerCommand("StopExtendIntake", intakeSubsystem.runExtension(0));
     NamedCommands.registerCommand("RunShooterPower", shootersubsystem.setPower(.33));
 
@@ -87,6 +87,7 @@ Command driveFielOrientedAngularVelocity = drivebase.driveFieldOrientedCommand(d
     //driverXbox.x().onTrue(driveFieldOrientedDirectAngle);
 
     supportXbox.y().onTrue(hopperSubsystem.runHopper(-.85, -0.85)).onFalse(hopperSubsystem.stop());
+    supportXbox.b().onTrue(hopperSubsystem.runHopper(-.85, 0)).onFalse(hopperSubsystem.stop());
     supportXbox.x().onTrue(hopperSubsystem.runHopperifReady(-.85, -0.85, shootersubsystem)).onFalse(hopperSubsystem.stop());
 
     supportXbox.a().onTrue(hopperSubsystem.runHopper(1, 1)).onFalse(hopperSubsystem.stop());
