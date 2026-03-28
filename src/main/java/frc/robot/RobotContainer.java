@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.commands.AlignAndDriveCommand;
@@ -33,23 +34,24 @@ public class RobotContainer {
   private final IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
 
   private final SwerveSubsystem drivebase = new SwerveSubsystem();
-  final CommandXboxController driverXbox = new CommandXboxController(DriveConstants.kDriverControllerPort);
+  // final CommandXboxController driverXbox = new CommandXboxController(DriveConstants.kDriverControllerPort);
+  final CommandJoystick driverJoystick = new CommandJoystick(DriveConstants.kDriverControllerPort);
   final CommandXboxController supportXbox = new CommandXboxController(DriveConstants.kOperatorControllerPort);
 
   private final SendableChooser<Command> autoChooser;
 
   SwerveInputStream driveAngularVelocity = SwerveInputStream.of(drivebase.getSwerveDrive(),
-                                                              () -> driverXbox.getLeftY()*-1,
-                                                              () -> driverXbox.getLeftX()*-1)
-                                                              .withControllerRotationAxis(() -> driverXbox.getRightX()*-1)
+                                                              () -> driverJoystick.getY()*-1,
+                                                              () -> driverJoystick.getX()*-1)
+                                                              .withControllerRotationAxis(() -> driverJoystick.getTwist()*-1)
                                                               .deadband(DriveConstants.kDriveDeadband)
                                                               .scaleTranslation(0.9)
                                                               .allianceRelativeControl(false);
-Command driveFieldOrientedDirectAngle = drivebase.driveCommand(
+/*Command driveFieldOrientedDirectAngle = drivebase.driveCommand(
 () -> MathUtil.applyDeadband(driverXbox.getLeftY()*-1,DriveConstants.kDriveDeadband),
 () -> MathUtil.applyDeadband(driverXbox.getLeftX()*-1,DriveConstants.kDriveDeadband),
 () -> driverXbox.getRightX()*-1,
-() -> driverXbox.getRightY()*-1);
+() -> driverXbox.getRightY()*-1);*/
 
 Command driveFielOrientedAngularVelocity = drivebase.driveFieldOrientedCommand(driveAngularVelocity);
   public RobotContainer() {
@@ -76,14 +78,14 @@ Command driveFielOrientedAngularVelocity = drivebase.driveFieldOrientedCommand(d
     drivebase.setDefaultCommand(driveFielOrientedAngularVelocity);
 
     //driverXbox.a().whileTrue(drivebase.alignToTag(visionSubsystem));
-    driverXbox.a().whileTrue(new AlignAndDriveCommand(visionSubsystem, drivebase, driverXbox));
-    driverXbox.y().onTrue(Commands.runOnce(drivebase::zeroGyro));
-    driverXbox.b().onTrue(new InstantCommand(() -> {
-      shootersubsystem.incrementoffset(0.02);
-    }));
-    driverXbox.x().onTrue(new InstantCommand(() -> {
-      shootersubsystem.incrementoffset(-0.02);
-    }));
+    driverJoystick.button(2).whileTrue(new AlignAndDriveCommand(visionSubsystem, drivebase, driverJoystick));
+    driverJoystick.button(3).onTrue(Commands.runOnce(drivebase::zeroGyro));
+    // driverXbox.b().onTrue(new InstantCommand(() -> {
+    //   shootersubsystem.incrementoffset(0.02);
+    // }));
+    // driverXbox.x().onTrue(new InstantCommand(() -> {
+    //   shootersubsystem.incrementoffset(-0.02);
+    // }));
     //driverXbox.x().onTrue(driveFieldOrientedDirectAngle);
 
     supportXbox.y().onTrue(hopperSubsystem.runHopper(-.85, -0.85)).onFalse(hopperSubsystem.stop());
@@ -91,17 +93,17 @@ Command driveFielOrientedAngularVelocity = drivebase.driveFieldOrientedCommand(d
     supportXbox.x().onTrue(hopperSubsystem.runHopperifReady(-.85, -0.85, shootersubsystem)).onFalse(hopperSubsystem.stop());
 
     supportXbox.a().onTrue(hopperSubsystem.runHopper(1, 1)).onFalse(hopperSubsystem.stop());
-    driverXbox.rightTrigger(0.1).onTrue(intakeSubsystem.runIntake(.9)).onFalse(intakeSubsystem.stop());
-    driverXbox.leftTrigger(0.1).onTrue(intakeSubsystem.runIntake(-.9)).onFalse(intakeSubsystem.stop());
+    driverJoystick.button(0).onTrue(intakeSubsystem.runIntake(.9)).onFalse(intakeSubsystem.stop());
+    driverJoystick.button(11).onTrue(intakeSubsystem.runIntake(-.9)).onFalse(intakeSubsystem.stop());
     supportXbox.rightBumper().whileTrue(shootersubsystem.runShootCommand()).onFalse(shootersubsystem.stop());
     //supportXbox.rightBumper().onTrue(shootersubsystem.setPower(0.3)).onFalse(shootersubsystem.stop());
-    driverXbox.povUp().onTrue(new InstantCommand(() -> {
+    driverJoystick.povUp().onTrue(new InstantCommand(() -> {
       shootersubsystem.increment_setpoint(25);
     }));
-    driverXbox.povDown().onTrue(new InstantCommand(() -> {
+    driverJoystick.povDown().onTrue(new InstantCommand(() -> {
       shootersubsystem.increment_setpoint(-25);
     }));
-driverXbox.povRight().onTrue(new InstantCommand(() -> {
+driverJoystick.povRight().onTrue(new InstantCommand(() -> {
       double visionRPM = visionSubsystem.getrpm();
       if (visionRPM != 0)
       {
@@ -110,8 +112,8 @@ driverXbox.povRight().onTrue(new InstantCommand(() -> {
       
     }));
 
-    driverXbox.back().onTrue(intakeSubsystem.runExtension(-.6)).onFalse(intakeSubsystem.stop());
-    driverXbox.start().onTrue(intakeSubsystem.runExtension(.6)).onFalse(intakeSubsystem.stop());
+    driverJoystick.button(12).onTrue(intakeSubsystem.runExtension(-.6)).onFalse(intakeSubsystem.stop());
+    driverJoystick.button(10).onTrue(intakeSubsystem.runExtension(.6)).onFalse(intakeSubsystem.stop());
 
 
   }
