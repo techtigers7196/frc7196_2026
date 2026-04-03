@@ -11,9 +11,9 @@ public class AlignAndDriveCommand extends Command
 {
     private VisionSubsystem m_vision;
     private SwerveSubsystem m_swerve;
-    private CommandJoystick m_controller;
+    private CommandXboxController m_controller;
 
-    public AlignAndDriveCommand(VisionSubsystem vision, SwerveSubsystem swerve, CommandJoystick controller)
+    public AlignAndDriveCommand(VisionSubsystem vision, SwerveSubsystem swerve, CommandXboxController controller)
     {
         this.m_vision = vision;
         this.m_swerve = swerve;
@@ -25,7 +25,7 @@ public class AlignAndDriveCommand extends Command
     {
         double tx = this.m_vision.getXYA()[0];
 
-        ChassisSpeeds desiredSpeeds = new ChassisSpeeds(this.m_controller.getY()*-2, this.m_controller.getX()*-2, -0.15*tx);
+        ChassisSpeeds desiredSpeeds = new ChassisSpeeds(this.m_controller.getLeftY()*-2, this.m_controller.getLeftX()*-2, -0.15*tx);
 
         m_swerve.driveFieldOriented(desiredSpeeds);
     }

@@ -35,8 +35,10 @@ public class ShooterSubsystem extends SubsystemBase {
 
   // Feedforward and PID (start at 0.0 per request)
   //private final SimpleMotorFeedforward m_shooterFeedforward = new SimpleMotorFeedforward(0.00, 0.000183);//(1/0.18)/60);
-  private final SimpleMotorFeedforward m_shooterFeedforward = new SimpleMotorFeedforward(0, 0.00185);
-  private final PIDController m_shooterPID = new PIDController(0.001, 0.01, 0.0001);
+  //private final SimpleMotorFeedforward m_shooterFeedforward = new SimpleMotorFeedforward(0, 0.00185);
+  //private final PIDController m_shooterPID = new PIDController(0.001, 0.01, 0.0001);
+  private final SimpleMotorFeedforward m_shooterFeedforward = new SimpleMotorFeedforward(0, 0.0021);
+  private final PIDController m_shooterPID = new PIDController(0.0003, 0.003, 0.0);
   
   private double driveOffset = 0;   
   //private final SimpleMotorFeedforward m_shooterFeedforward = new SimpleMotorFeedforward(0, 0.023);
@@ -67,6 +69,7 @@ public class ShooterSubsystem extends SubsystemBase {
   
 
     m_shooterPID.setTolerance(0.0);
+    m_shooterPID.setIZone(30);
 
     // initialize NetworkTables
     m_rpmEntry.setDouble(0.0);
@@ -148,9 +151,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
   public boolean isReady()
   {
-    double rpm = m_shooterEncoder.getVelocity(); // convert rev/sec to RPM
-
-    return Math.abs(rpm - m_setpoint) < 25;
+    return Math.abs(m_shooterPID.getError()) < 25;
   }
 
   @Override
@@ -164,6 +165,7 @@ public class ShooterSubsystem extends SubsystemBase {
     m_errorEntry.setDouble(m_setpoint - rpm);
     m_voltageEntry.setDouble(m_shooterMotor.getAppliedOutput() * m_shooterMotor.getBusVoltage());
 
+    //System.out.println(Math.abs(rpm - m_setpoint));
     if (Math.abs(rpm - m_setpoint) > 25)
     {
       m_ready.setBoolean(false);

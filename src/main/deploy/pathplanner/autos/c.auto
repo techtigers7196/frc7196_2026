@@ -7,7 +7,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "c1"
+            "pathName": "c0"
           }
         },
         {
@@ -27,6 +27,12 @@
                 }
               }
             ]
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "c1"
           }
         },
         {

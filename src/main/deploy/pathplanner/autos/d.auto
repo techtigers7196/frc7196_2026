@@ -72,15 +72,15 @@
           }
         },
         {
-          "type": "path",
-          "data": {
-            "pathName": "d2"
-          }
-        },
-        {
           "type": "named",
           "data": {
             "name": "RunIntake"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "d2"
           }
         },
         {
